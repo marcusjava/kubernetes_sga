@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: db-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      server: db
+  template:
+    metadata:
+      name: db-sga
+      labels:
+        server: db
+    spec:
+      containers:
+        - name: db-sga-container
+          image: mysql:5.7
+          resources:
+            requests:
+              cpu: "0.3"
+              memory: "512Mi"
+            limits:
+              cpu: "0.5"
+              memory: "512Mi"
+          ports:
+            - containerPort: 3306
+          volumeMounts:
+            - mountPath: /var/lib/mysql
+              name: mysql-vol
+          envFrom:
+            - configMapRef:
+                name: db-configmap
+      restartPolicy: Always
+      volumes:
+        - name: mysql-vol
+          hostPath:
+            path: /data/mysql-sga
+            type: DirectoryOrCreate

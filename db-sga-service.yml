@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: db-service
+  labels:
+    server: db-sga-svc
+spec:
+  type: ClusterIP
+  selector:
+    server: db
+  ports:
+    - port: 3306

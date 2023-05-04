@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: novosga-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: novosga
+  template:
+    metadata:
+      name: novosga-deployment
+      labels:
+        app: novosga
+    spec:
+      containers:
+        - name: novosga-container
+          image: novosga/novosga:latest
+          resources:
+            requests:
+              cpu: "0.3"
+              memory: "256Mi"
+            limits:
+              cpu: "0.5"
+              memory: "512Mi"
+          ports:
+            - containerPort: 80
+            - containerPort: 2020
+          envFrom:
+            - configMapRef:
+                name: app-configmap
+      restartPolicy: Always
